@@ -8,6 +8,17 @@ export default function App() {
   const [moedaDestino, setMoedaDestino] = useState('USD')
   const [valorConvertido, setValorConvertido] = useState('')
 
+  const handleConverter = () => {
+    setResultado('Teste')
+  }
+  
+  const handleLimpar = () => {
+    setResultado('');
+    setVAlorEntrada('33.33333');
+    setMoedaOrigem('BRL');
+    setMoedaDestino('USD');
+   }
+
   const buscarHandle = async () => {
     let URL = `https://economia.awesomeapi.com.br/last/${moedaOrigem}-${moedaDestino}`
     try {
