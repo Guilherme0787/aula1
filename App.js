@@ -1,23 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 
 export default function App() {
   const [moedaOrigem, setMoedaOrigem] = useState('BRL')
   const [moedaDestino, setMoedaDestino] = useState('USD')
   const [valorConvertido, setValorConvertido] = useState('')
-
-  const handleConverter = () => {
-    setResultado('Teste')
-  }
-  
-  const handleLimpar = () => {
-    setResultado('');
-    setVAlorEntrada('33.33333');
-    setMoedaOrigem('BRL');
-    setMoedaDestino('USD');
-   }
+  const [valorOriginal, setValorOriginal] = useState("33.33333")
 
   const buscarHandle = async () => {
     let URL = `https://economia.awesomeapi.com.br/last/${moedaOrigem}-${moedaDestino}`
@@ -26,9 +16,11 @@ export default function App() {
       let json = await page.json()
       console.log(json)
       let indice = parseFloat(json[`${moedaOrigem}${moedaDestino}`].high)
-    
+      // setValorConvertido(indice)
+      let valor = parseFloat(valorOriginal)
+      setValorConvertido((indice*valor).toFixed(2))
     } catch (error) {
-      
+      setValorConvertido(`Erro: ${error.message}`)
     }
     // setValorConvertido(URL);
   }
@@ -66,6 +58,10 @@ export default function App() {
           <Picker.Item label="Bitcoin" value="BTC" />
         </Picker>
       </View>
+      <View>
+        <TextInput style={styles.input} value={valorOriginal} onChangeText={setValorOriginal} keyboardType="numeric"
+       />
+      </View>
       <Pressable onPress={buscarHandle}><Text>Buscar Valor</Text></Pressable>
       <Text>{`Resultado: ${valorConvertido}`}</Text>
       <StatusBar style="auto" />
@@ -76,8 +72,39 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  title: {
+    color: '#fff'
+  },
+  picker: {
+    color: '#fff',
+    width: 200,
+    height: 50,
+    backgroundColor: '#000'
+  },
+  input: {
+    color: '#fff',
+    textAlign: 'right',
+    height: 40,
+    width: 200
+  },
+  tbMoeda: {
+    color: '#fff'
+  },
+  button: {
+    width: 200,
+    height: 40,
+    paddingBottom: 10,
+    backgroundColor: '#90ee90',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 5
+  },
+  lbResultado: {
+    color: '#fff'
+  }
 });
